@@ -15,12 +15,11 @@ services:
         value: 3.11.9
 
   # -------------------------------------------------------------------------
-  # 2. React Frontend Static Site
+  # 2. React Frontend Static Site (served globally via Render CDN)
   # -------------------------------------------------------------------------
   - type: web
     name: lead-intelligence-frontend
     env: static
-    region: oregon
     plan: free
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
