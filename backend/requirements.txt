@@ -1,0 +1,19 @@
+# Phase 1 (data cleaning)
+pandas>=2.0
+
+# Phase 1b (DB + API)
+fastapi
+uvicorn
+sqlalchemy
+openpyxl
+python-multipart
+
+# Phase 2 (opportunity engine — YAML config)
+pyyaml
+
+# Phase 3 (email connector)
+python-dotenv
+
+# Phase 4 (CV analysis & skill matching)
+pypdf
+

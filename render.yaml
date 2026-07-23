@@ -1,0 +1,36 @@
+# Render Infrastructure Blueprint for Lead Intelligence Application
+services:
+  # -------------------------------------------------------------------------
+  # 1. FastAPI Backend Web Service
+  # -------------------------------------------------------------------------
+  - type: web
+    name: lead-intelligence-backend
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+
+  # -------------------------------------------------------------------------
+  # 2. React Frontend Static Site
+  # -------------------------------------------------------------------------
+  - type: web
+    name: lead-intelligence-frontend
+    env: static
+    region: oregon
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: lead-intelligence-backend
+          property: host
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

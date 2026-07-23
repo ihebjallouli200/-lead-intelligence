@@ -1,0 +1,154 @@
+# Opportunity Engine Rules — Lead Intelligence
+# =============================================
+# These rules classify contacts into opportunity types and assign priority scores.
+# The engine evaluates rules top-to-bottom; FIRST matching rule wins for opportunity_type.
+# Priority score is computed from base_score + all matching priority boosts.
+#
+# Edit this file to tune classification — no Python code changes needed.
+#
+# Available condition fields (from the real Apollo data):
+#   - industry_contains: list of substrings matched against Company.industry_raw
+#   - keywords_contains: list of substrings matched against Company.keywords
+#   - technologies_contains: list of substrings matched against Company.technologies
+#   - size_bucket: list of exact Company.size_bucket values
+#   - role: list of exact Contact.role_canonical values
+#   - is_founder: true/false
+#   - seniority: list of exact Contact.seniority values
+#   - country: list of exact Company.country values
+#
+# Real data context (from the Apollo CSV):
+#   - 9,194 companies in "information technology & services" (53% of all)
+#   - 1,263 in telecommunications, 851 in "computer & network security"
+#   - 7,249 Micro (1-10), 6,436 Startup (11-50) — overwhelmingly small companies
+#   - Keywords field (88.7% filled) contains: saas, ai, cloud, cybersecurity, etc.
+#   - Technologies field (88.9%) contains: AWS, Azure, React, Python, etc.
+
+# --- Base score rules (everyone starts here) ---
+base_score: 30
+
+# --- Priority boost rules (additive — multiple can match) ---
+priority_boosts:
+  - name: "Decision Maker Boost"
+    description: "CEOs, CTOs, COOs get higher priority — they can sign off"
+    conditions:
+      role: ["CEO", "CTO", "COO", "CIO"]
+    boost: 15
+
+  - name: "Founder Boost"
+    description: "Founders are key decision makers regardless of title"
+    conditions:
+      is_founder: true
+    boost: 10
+
+  - name: "Small Company Boost"
+    description: "Micro/Startup companies are more likely to need external help"
+    conditions:
+      size_bucket: ["Micro (1-10)", "Startup (11-50)"]
+    boost: 10
+
+  - name: "Valid Email Boost"
+    description: "Having a valid email makes outreach possible"
+    conditions:
+      email_valid: true
+    boost: 5
+
+  - name: "European Market Boost"
+    description: "Core target geography for this lead list"
+    conditions:
+      country: ["France", "Germany", "Spain", "Switzerland", "Belgium", "Austria", "Italy", "United Kingdom", "Netherlands"]
+    boost: 5
+
+# --- Opportunity type classification rules (first match wins) ---
+# Order matters: more specific rules go first, generic fallback at bottom
+opportunity_rules:
+  - name: "AI & Machine Learning Services"
+    description: "Companies working with AI/ML — offer AI automation, ML consulting"
+    conditions:
+      keywords_contains: ["artificial intelligence", "machine learning", "deep learning", "llm", "generative ai", "nlp", "natural language"]
+    opportunity_type: "AI Automation"
+
+  - name: "AI from Technologies"
+    description: "Companies using AI-related technologies"
+    conditions:
+      technologies_contains: ["TensorFlow", "PyTorch", "OpenAI", "Hugging Face"]
+    opportunity_type: "AI Automation"
+
+  - name: "SaaS Platform"
+    description: "SaaS companies — offer development, scaling, DevOps"
+    conditions:
+      keywords_contains: ["saas", "software as a service", "subscription", "platform"]
+    opportunity_type: "SaaS Development"
+
+  - name: "Cybersecurity Services"
+    description: "Security-focused companies"
+    conditions:
+      industry_contains: ["network security", "cyber"]
+    opportunity_type: "Cybersecurity Consulting"
+
+  - name: "Cybersecurity from Keywords"
+    description: "Companies with security keywords even if industry doesn't match"
+    conditions:
+      keywords_contains: ["cybersecurity", "penetration testing", "vulnerability", "threat detection", "infosec"]
+    opportunity_type: "Cybersecurity Consulting"
+
+  - name: "Cloud Infrastructure"
+    description: "Companies using cloud heavily — offer DevOps, cloud migration"
+    conditions:
+      technologies_contains: ["Amazon Web Services", "AWS", "Microsoft Azure", "Google Cloud"]
+      keywords_contains: ["cloud", "infrastructure", "devops"]
+    opportunity_type: "Cloud & DevOps"
+
+  - name: "Cloud from Keywords Only"
+    description: "Cloud-focused from keywords when no specific tech stack"
+    conditions:
+      keywords_contains: ["cloud computing", "cloud services", "cloud infrastructure", "iaas", "paas"]
+    opportunity_type: "Cloud & DevOps"
+
+  - name: "FinTech"
+    description: "Financial technology companies"
+    conditions:
+      industry_contains: ["financial services", "banking", "fintech"]
+      keywords_contains: ["fintech", "payment", "blockchain", "cryptocurrency", "banking"]
+    opportunity_type: "FinTech Solutions"
+
+  - name: "Data & Analytics"
+    description: "Data-focused companies"
+    conditions:
+      keywords_contains: ["data analytics", "big data", "business intelligence", "data science", "data engineering"]
+    opportunity_type: "Data & Analytics"
+
+  - name: "Web & Mobile Development"
+    description: "Companies that likely need web/mobile dev services"
+    conditions:
+      technologies_contains: ["React", "Angular", "Vue.js", "Node.js", "Next.js"]
+    opportunity_type: "Web & Mobile Dev"
+
+  - name: "IoT & Hardware"
+    description: "IoT and connected devices companies"
+    conditions:
+      keywords_contains: ["iot", "internet of things", "embedded", "connected devices", "smart devices"]
+    opportunity_type: "IoT Solutions"
+
+  - name: "Telecom Services"
+    description: "Telecommunications companies"
+    conditions:
+      industry_contains: ["telecommunications", "wireless"]
+    opportunity_type: "Telecom Services"
+
+  - name: "Consulting & Professional Services"
+    description: "Management consulting and professional services"
+    conditions:
+      industry_contains: ["management consulting", "professional training"]
+    opportunity_type: "Consulting Partnership"
+
+  - name: "IT Services - Generic"
+    description: "Broad IT services — the largest bucket in this dataset"
+    conditions:
+      industry_contains: ["information technology"]
+    opportunity_type: "IT Services"
+
+  # Fallback — contacts that don't match any specific rule
+  - name: "General Lead"
+    description: "No specific opportunity identified — review manually"
+    conditions: {}
+    opportunity_type: "General Lead"

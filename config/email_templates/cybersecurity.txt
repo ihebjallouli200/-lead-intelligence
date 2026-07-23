@@ -1,0 +1,11 @@
+Subject: Security posture at {{company}}
+
+Hi {{first_name}},
+
+Given {{company}}'s work in cybersecurity, I imagine staying ahead of evolving threats is a constant priority.
+
+I've been working with security teams on approaches to strengthen their posture without slowing down development. A few ideas might be relevant for your team.
+
+Would you be open to a brief conversation? I'd love to hear what challenges you're seeing.
+
+Best regards

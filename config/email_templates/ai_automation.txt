@@ -1,0 +1,11 @@
+Subject: AI automation for {{company}} — quick thought
+
+Hi {{first_name}},
+
+I noticed {{company}} is working in AI and automation — exciting space.
+
+Many {{size_bucket}} companies like yours are finding ways to accelerate their AI workflows and reduce manual work. I have a few ideas that might resonate.
+
+Would you be open to a 15-minute call this week? Happy to share what's working for similar teams.
+
+Best regards

@@ -1,0 +1,11 @@
+Subject: SaaS scaling at {{company}}
+
+Hi {{first_name}},
+
+I noticed {{company}} is building in the SaaS space — always exciting to see.
+
+As your platform grows, challenges around scalability, DevOps, and feature velocity tend to multiply. I work with {{size_bucket}} SaaS teams and have a few approaches that might help.
+
+Would a quick 15-minute call make sense? Happy to share what I've seen work.
+
+Best regards

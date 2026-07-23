@@ -1,0 +1,11 @@
+Subject: Quick question about {{company}}
+
+Hi {{first_name}},
+
+I came across {{company}} and was impressed by what you're building.
+
+As {{role}} at {{company}}, I imagine you're always looking for ways to move faster and stay ahead.
+
+I'd love to share a quick idea that could help — would you be open to a short chat this week?
+
+Best regards
