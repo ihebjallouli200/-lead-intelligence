@@ -14,11 +14,12 @@ services:
       - key: PYTHON_VERSION
         value: 3.11.9
 
-# ---------------------------------------------------------------------------
-# 2. React Frontend Static Site (served globally via Render CDN)
-# ---------------------------------------------------------------------------
-staticSites:
-  - name: lead-intelligence-frontend
+  # -------------------------------------------------------------------------
+  # 2. React Frontend Static Site
+  # -------------------------------------------------------------------------
+  - type: web
+    name: lead-intelligence-frontend
+    runtime: static
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
     envVars:
