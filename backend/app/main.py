@@ -37,6 +37,17 @@ app.add_middleware(
 )
 
 
+@app.get("/")
+def root():
+    return {
+        "status": "online",
+        "name": "Lead Intelligence API",
+        "documentation": "/docs",
+        "endpoints": ["/stats", "/companies", "/contacts", "/filters", "/match-cv-leads"],
+    }
+
+
+
 # ---------------------------------------------------------------------------
 # GET /companies -- filterable company list
 # ---------------------------------------------------------------------------
